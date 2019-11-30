@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
-
+const cors = require('cors');
 
 const PageRoutes=require('./routes/PageRoutes');
 const UserRoutes = require('./routes/UserRoutes');
@@ -17,6 +17,7 @@ const initPassportStrategy=require('./config/passport');
 // Create an express app
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(passport.initialize());
@@ -31,29 +32,42 @@ mongoose
 .catch((err)=>{
     console.log('error', err)
 });
-app.use(
-   '/',
-   PageRoutes
-);
+
 app.use(
     '/users',
     UserRoutes
 );
+
+app.get( 
+    '/feed/all',
+    (req, res)=> {
+        Feed.find()
+        .then((users)=>{
+            res.json(users);
+        })
+        .catch((err)=>console.log(err))
+    }
+);
+
 app.use(
     '/feed',
     passport.authenticate('jwt',{session: false}),
     FeedRoutes
 );
+
 app.use(
     '/company',
     passport.authenticate('jwt',{session: false}),
     CompanyRoutes
 
 )
+app.use(
+    '/',
+    PageRoutes
+ );
 
 
 
-
-app.listen(process.env.PORT || 3000, ()=>{
+app.listen(process.env.PORT || 3010, ()=>{
     console.log('You are connected!')
 })

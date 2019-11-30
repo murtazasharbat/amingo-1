@@ -84,7 +84,7 @@ router.post('/login', (req, res)=>{
                         payload,
                         secret,
                         (err, theJWT)=>{
-                            res.json({ token: theJWT })
+                            res.json({ token: theJWT,userid: theUser.id})
                         }
                     )
 

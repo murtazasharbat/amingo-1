@@ -27,7 +27,7 @@ router.post('/addlike', async (req, res)=>{
     
     let userLikes;
     let theFeedID = req.body.feedid;
-    let userID = req.body.userid;
+    let userID = req.user.id;
 
     // 1. Get the document with matching id
     let theDocument = await Feed
