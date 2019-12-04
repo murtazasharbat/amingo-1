@@ -31,6 +31,10 @@ const FeedSchema = new Schema({
         default: []
          
     },
+    replies:{
+        type: Array,
+        default: []
+    },
     date: {
         type: Date,
         default: Date.now
