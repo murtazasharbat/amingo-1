@@ -1,17 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const Feed = require('../models/Feed')
+const Feed = require('../models/Feed');
+const User = require('../models/User');
 
-router.post('/', (req, res)=>{ 
+
+router.post('/', async (req, res)=>{ // /feed/...
     const formData = {
-        userName: req.body.userName,
+        // username: req.body.username,
         comment: req.body.comment,
-        tags: req.body.tags,
+        // tags: req.body.tags,
         image: req.body.image
     }
 
+    // Get the user's first name and last names 
+    // Note: req.user.id is coming from passport
+    const theUser = await User.findById(req.user.id);
+
+    // Update the formData
+    formData.username = theUser.firstName + ' ' + theUser.lastName;
+
     const newFeed = new Feed(formData);
 
+    // Save the feed
     newFeed
     .save()
     .then(newFeedData=>{
@@ -26,8 +36,12 @@ router.post('/', (req, res)=>{
 router.post('/addlike', async (req, res)=>{
     
     let userLikes;
-    let theFeedID = req.body.feedid;
-    let userID = req.user.id;
+
+    // From body in fetch request
+    let theFeedID = req.body.feedid; 
+
+    // From the header in the fetch request (processed by passport)
+    let userID = req.user.id; 
 
     // 1. Get the document with matching id
     let theDocument = await Feed

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const FeedSchema = new Schema({
-    userName: {
+    username: {
         type: String,
         required: true
     },

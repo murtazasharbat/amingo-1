@@ -38,10 +38,15 @@ app.use(
     UserRoutes
 );
 
-app.get( 
+app.post( 
     '/feed/all',
     (req, res)=> {
-        Feed.find()
+        const timestamp=req.body.timestamp;
+        const dateFilter =timestamp ? {date:{$lt: timestamp}}:null;
+        Feed
+        .find(dateFilter)
+        .sort({date: -1})
+        .limit(3)
         .then((users)=>{
             res.json(users);
         })

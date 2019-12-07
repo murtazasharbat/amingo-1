@@ -13,6 +13,18 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    followers:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    following:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    }],
+    post:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Post'
+    }],
     email: {
         type: String,
         required: true
@@ -20,6 +32,9 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    avatar:{
+        type: String
     },
     occupation: {
         type: String

@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const gravater = require('gravatar')
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = require('../models/User');
@@ -11,7 +12,8 @@ router.post('/register', (req, res)=>{
         firstName : req.body.firstName,
         lastName : req.body.lastName,
         email : req.body.email,
-        password : req.body.password
+        password : req.body.password,
+        
     }
 
     const newUser = new User(formData);
@@ -102,6 +104,24 @@ router.post('/login', (req, res)=>{
     .catch()
 
 });
+router.post('/follow', (req, res)=>{
+    const UserA= req.user.id;
+    const UserBemail= req.body.followedemail;
+     UserModel
+        .findOne({ email: UserBemail }) //{}
+        .then((UserB)=>{
+     if(UserB) {
+       UserB.followers.push(UserA);
+       UserA.following.push(UserB);
+       Promise.all([UserB.save(),UserA.save()])
+       .then(success=> res.json(success))
+        .catch(err => res.status(404).json({ nofollowsaved: 'Unable to follower user' }));
+     }
+     else{
+        res.json({ message: "Could not follow that user" });
+     }
+        }
+        )})
 
 
 
